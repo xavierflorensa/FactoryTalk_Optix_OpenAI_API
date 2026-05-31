@@ -1,0 +1,7 @@
+Name: Model
+Type: ModelCategoryFolder
+Children:
+- Name: ResponseString
+  Type: BaseDataVariableType
+  DataType: String
+  Value: "0"
