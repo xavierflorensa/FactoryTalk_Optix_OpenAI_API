@@ -23,8 +23,14 @@ public class RuntimeNetLogic1 : BaseNetLogic
         // Insert code to be executed when the user-defined logic
        var responseVar = Project.Current.GetVariable("Model/ResponseString");
        responseVar.Value = "Hello World!";
-        var apiKey = "Your_OpenAI_API_Key_Here"; // Replace with your actual API key
-        var endpoint = "https://api.openai.com/v1/chat/completions";
+            var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY"); // read from Windows env vars
+            if (string.IsNullOrEmpty(apiKey))
+            {
+                Log.Error("OPENAI_API_KEY environment variable is not set. Aborting request.");
+                responseVar.Value = "Error: OPENAI_API_KEY not set.";
+                return;
+            }
+            var endpoint = "https://api.openai.com/v1/chat/completions";
         var client = new HttpClient();
         client.DefaultRequestHeaders.Add("Authorization", $"Bearer {apiKey}");
 
