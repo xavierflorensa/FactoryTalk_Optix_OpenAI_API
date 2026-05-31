@@ -21,6 +21,18 @@ public class RuntimeNetLogic1 : BaseNetLogic
     public override async void Start()
     {
         // Insert code to be executed when the user-defined logic
+       
+    }
+
+    public override void Stop()
+    {
+        // Insert code to be executed when the user-defined logic is stopped
+    }
+
+    [ExportMethod]
+    
+    public async void Translate()
+    {
        var responseVar = Project.Current.GetVariable("Model/ResponseString");
        responseVar.Value = "Hello World!";
             var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY"); // read from Windows env vars
@@ -82,8 +94,5 @@ public class RuntimeNetLogic1 : BaseNetLogic
         
     }
 
-    public override void Stop()
-    {
-        // Insert code to be executed when the user-defined logic is stopped
-    }
+
 }
