@@ -48,7 +48,37 @@ public class RuntimeNetLogic1 : BaseNetLogic
         var response = await client.PostAsync(endpoint, content);
         var responseText = await response.Content.ReadAsStringAsync();
         Log.Info("ResponseString: "+responseText);
-        responseVar.Value = responseText;
+
+        // Try to parse the JSON response and extract the assistant message content
+        try
+        {
+            using (var doc = JsonDocument.Parse(responseText))
+            {
+                var root = doc.RootElement;
+                if (root.TryGetProperty("choices", out var choices) && choices.ValueKind == JsonValueKind.Array && choices.GetArrayLength() > 0)
+                {
+                    var first = choices[0];
+                    if (first.TryGetProperty("message", out var message) && message.ValueKind == JsonValueKind.Object && message.TryGetProperty("content", out var contentProp))
+                    {
+                        var assistantContent = contentProp.GetString();
+                        responseVar.Value = assistantContent ?? responseText;
+                    }
+                    else
+                    {
+                        responseVar.Value = responseText;
+                    }
+                }
+                else
+                {
+                    responseVar.Value = responseText;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Error("Failed to parse response JSON: " + ex.Message);
+            responseVar.Value = responseText;
+        }
         
     }
 
