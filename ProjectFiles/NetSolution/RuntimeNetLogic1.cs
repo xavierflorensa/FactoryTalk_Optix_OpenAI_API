@@ -35,6 +35,7 @@ public class RuntimeNetLogic1 : BaseNetLogic
     {
        var responseVar = Project.Current.GetVariable("Model/ResponseString");
        responseVar.Value = "Hello World!";
+       var myTextbox = Project.Current.Get<TextBox>("UI/MainWindow/TextBox2");
             var apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY"); // read from Windows env vars
             if (string.IsNullOrEmpty(apiKey))
             {
@@ -51,7 +52,8 @@ public class RuntimeNetLogic1 : BaseNetLogic
             model = "gpt-3.5-turbo",
             messages = new[]
             {
-                new { role = "user", content = "Translate the following English text to French: 'Hello, how are you?'" }
+                //new { role = "user", content = "Translate the following English text to French: 'Hello, how are you?'" }
+                new { role = "user", content = "Translate the following English text to "+myTextbox.Text+": 'Hello, how are you?'" }
             },
             max_tokens = 60
         };
